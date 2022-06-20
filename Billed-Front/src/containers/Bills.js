@@ -34,11 +34,14 @@ export default class {
       .list()
       .then(snapshot => {
         const bills = snapshot
+        bills.sort(function(a, b) {
+          return a.amount - b.amount
+        })
           .map(doc => {
             try {
               return {
                 ...doc,
-                // date: formatDate(doc.date),
+                date: formatDate(doc.date),
                 status: formatStatus(doc.status)
               }
             } catch(e) {
@@ -52,7 +55,6 @@ export default class {
               }
             }
           })
-          console.log('length', bills.length)
         return bills
       })
     }
