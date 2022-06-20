@@ -22,8 +22,14 @@ export default class NewBill {
     const fileName = filePath[filePath.length-1]
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)
-    formData.append('email', email)
+
+    if ( /\.(jpeg|jpg|png)$/i.test(file.name) === false ) {
+      alert("not an image !")
+    } else {
+      formData.append('file', file)
+      formData.append('email', email)
+    }
+
 
     this.store
       .bills()
