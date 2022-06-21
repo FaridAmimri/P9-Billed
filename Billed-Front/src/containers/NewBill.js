@@ -25,11 +25,11 @@ export default class NewBill {
 
     if ( /\.(jpeg|jpg|png)$/i.test(file.name) === false ) {
       alert("not an image !")
+      return 
     } else {
       formData.append('file', file)
       formData.append('email', email)
     }
-
 
     this.store
       .bills()
