@@ -62,7 +62,7 @@ describe("Given I am connected as an employee", () => {
       const bill = new Bills({
         document,
         onNavigate,
-        firestore: null,
+        store: null,
         localStorage: window.localStorage
       })
       $.fn.modal = jest.fn()
@@ -77,13 +77,16 @@ describe("Given I am connected as an employee", () => {
     })
 
     test('then a modal should not open', () => {
+      // create the context
       document.body.innerHTML = '<div></div>'
       const onNavigate = (pathname) => {document.body.innerHTML = ROUTES({pathname})}
       jest.spyOn(document, 'querySelectorAll').mockReturnValue(null)
+
+      // create New Bills
       const bill = new Bills({
         document,
         onNavigate,
-        firestore: null,
+        store: null,
         localStorage: window.localStorage
       })
       $.fn.modal = jest.fn()
@@ -102,21 +105,21 @@ describe("Given I am connected as an employee", () => {
 
   describe('when i click on the new Bill Button', () => {
     test('a new bill modal should open', () => {
-      Object.defineProperty(window, 'local storage', {value: localStorageMock})
-      window.localStorage.setItem(
-        'user', JSON.stringify({
-          type: 'employee'
-        })
-      )
+      Object.defineProperty(window, 'localStorage', {value: localStorageMock})
+      window.localStorage.setItem('user', JSON.stringify({type: 'employee'}))
+
       const html = BillsUI({data: []})
       document.body.innerHTML = html
       const onNavigate = (pathname) => {document.body.innerHTML = ROUTES({pathname})}
+
+      // create a NewBill
       const bills = new Bills({
         document,
         onNavigate,
-        firestore: null,
+        store: null,
         localStorage: window.localStorage
       })
+
       const button = screen.getByTestId('btn-new-bill')
       const handleClickNewBill = jest.fn((e) => bills.handleClickNewBill(e))
       button.click('click', handleClickNewBill)
