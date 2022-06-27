@@ -5,10 +5,12 @@
 import { fireEvent, screen } from "@testing-library/dom"
 import BillsUI from "../views/BillsUI.js"
 import { bills } from "../fixtures/bills.js"
-import Bills from "../containers/Bills";
-import { localStorageMock } from "../__mocks__/localStorage";
-import { ROUTES, ROUTES_PATH } from "../constants/routes";
-import router from "../app/Router.js";
+import Bills from "../containers/Bills"
+import { localStorageMock } from "../__mocks__/localStorage"
+import { ROUTES, ROUTES_PATH } from "../constants/routes"
+import router from "../app/Router.js"
+import mockedBills from "../__mocks__/store"
+import "@testing-library/jest-dom"
 
 describe("Given I am connected as an employee", () => {
 
@@ -135,4 +137,42 @@ describe("Given I am connected as an employee", () => {
     })
   })
 
+    //test d'intégration GET 
+  describe('tests integration Get', () => {
+
+    test('fetches bills from mock API list', async () => {
+      const getSpy = jest.spyOn(mockedBills, 'bills')
+      const bills = await mockedBills.bills().list()
+      expect(getSpy).toHaveBeenCalledTimes(1)
+      expect(bills.length).toBe(4)
+    })
+
+    test('fetches bills from an API and fails with 404 message error', async () => {
+      mockedBills.bills.mockImplementationOnce(() => {
+        return {
+          list : () =>  {
+            return Promise.reject(new Error("Erreur 404"))
+          }
+        }
+      })
+      document.body.innerHTML = BillsUI({error: 'Erreur 404'})
+      const message = await screen.getByText(/Erreur 404/)
+      expect(message).toBeTruthy()
+    })
+
+    test('fetches bills from an API and fails with 500 message error', async () => {
+      mockedBills.bills.mockImplementationOnce(() => {
+        return {
+          list : () =>  {
+            return Promise.reject(new Error("Erreur 500"))
+          }
+        }
+      })
+      document.body.innerHTML = BillsUI({error: 'Erreur 500'})
+      const message = await screen.getByText(/Erreur 500/)
+      expect(message).toBeTruthy()
+    })
+  })
 })
+
+
