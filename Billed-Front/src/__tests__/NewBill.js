@@ -90,8 +90,8 @@ describe("Given I am connected as an employee", () => {
       // verify we have an extension .jpg
       expect(file.files.length).toEqual(1)
 
-      // The window alert should be in displayed
-      // expect(document.querySelector("#errorMessagId").style.display).toBe("none")
+      // The error message should displayed "none"
+      expect(document.querySelector("#errorMessagId").style.display).toBe("none")
     })
   })
 
