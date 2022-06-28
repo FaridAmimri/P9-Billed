@@ -137,7 +137,7 @@ describe("Given I am connected as an employee", () => {
     })
   })
 
-    //test d'intégration GET 
+  //test d'intégration Get
   describe('tests integration Get', () => {
 
     test('fetches bills from mock API list', async () => {
