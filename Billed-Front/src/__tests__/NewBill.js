@@ -44,8 +44,8 @@ describe("Given I am connected as an employee", () => {
       // get handleSubmit function
       expect(handleChangeFile).toBeCalled()
 
-      // If file have '.txt' extension, window alert should be displayed
-      // expect(window.alert).style.display
+      // If file have '.txt' extension, the errorMessage should be displayed "block"
+      expect(document.querySelector("#errorMessagId").style.display).toBe("block")
     })
 
      // test message d'erreur
@@ -71,7 +71,7 @@ describe("Given I am connected as an employee", () => {
       const newBill = new NewBill({
         document,
         onNavigate,
-        store,
+        store: null,
         localStorage: window.localStorage,
       })
 
@@ -95,5 +95,34 @@ describe("Given I am connected as an employee", () => {
     })
   })
 
- 
+  //test d'intégration Post (function handleSubmit)
+  describe("When I'm on NewBill page and click on submit btn", () => {
+    test("Then the function handleSubmit should be called", () => {
+      document.body.innerHTML = NewBillUI()
+
+      const onNavigate = (pathname) => {
+        document.body.innerHTML = ROUTES({
+          pathname
+        })
+      }
+      // create a NewBill
+      const newBill = new NewBill({
+        document,
+        onNavigate,
+        store: null,
+        localStorage: window.localStorage,
+      })
+
+      // get the form
+      const form = document.querySelector(`form[data-testid="form-new-bill"]`)
+      // get handleSubmit function
+      const handleSubmit = jest.fn(newBill.handleSubmit)
+      // listen the submit
+      form.addEventListener("submit", handleSubmit)
+      // simulated a btn type "submit"
+      fireEvent.submit(form)
+      // test
+      expect(handleSubmit).toHaveBeenCalled()
+    })
+  })
 })
