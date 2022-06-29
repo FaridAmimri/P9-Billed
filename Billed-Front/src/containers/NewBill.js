@@ -32,14 +32,11 @@ export default class NewBill {
     const fileName = filePath[filePath.length-1]
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-    let error = document.getElementById("errorMessagId")
+    const error = document.getElementById("errorMessagId")
 
     if ( /\.(jpeg|jpg|png)$/i.test(file.name) === false ) {
-      const test = document.querySelector(`input[data-testid="file"]`)
-      test.value = ""
       error.style.display = "block"
     } else {
-      error.style.display = "none"
       formData.append('file', file)
       formData.append('email', email)
 
