@@ -14,7 +14,17 @@ export default class NewBill {
     this.fileName = null
     this.billId = null
     new Logout({ document, localStorage, onNavigate })
+
+    //Création du msg d'erreur
+    const error = this.document.createElement('span')
+    error.innerHTML = "<strong>⚠</strong> Veuillez choisir un format png, jpg ou jpeg"
+    error.id = 'errorMessagId'
+    error.style.display = "none"
+
+    const label = document.querySelector(`div[data-testid="errorMessag"]`)
+    label.appendChild(error)
   }
+  
   handleChangeFile = e => {
     e.preventDefault()
     const file = this.document.querySelector(`input[data-testid="file"]`).files[0]
@@ -22,10 +32,19 @@ export default class NewBill {
     const fileName = filePath[filePath.length-1]
     const formData = new FormData()
     const email = JSON.parse(localStorage.getItem("user")).email
-    formData.append('file', file)
-    formData.append('email', email)
+    const error = document.getElementById("errorMessagId")
 
-    this.store
+    if ( /\.(jpeg|jpg|png)$/i.test(file.name) === false ) {
+      const fileTest = this.document.querySelector(`input[data-testid="file"]`)
+      fileTest.value = ""
+      error.style.display = "block"
+      e.preventDefault()
+    } else {
+      error.style.display = "none"
+      formData.append('file', file)
+      formData.append('email', email)
+
+      this.store
       .bills()
       .create({
         data: formData,
@@ -39,10 +58,11 @@ export default class NewBill {
         this.fileUrl = fileUrl
         this.fileName = fileName
       }).catch(error => console.error(error))
+    }
   }
+
   handleSubmit = e => {
     e.preventDefault()
-    console.log('e.target.querySelector(`input[data-testid="datepicker"]`).value', e.target.querySelector(`input[data-testid="datepicker"]`).value)
     const email = JSON.parse(localStorage.getItem("user")).email
     const bill = {
       email,
