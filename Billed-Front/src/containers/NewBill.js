@@ -35,8 +35,12 @@ export default class NewBill {
     const error = document.getElementById("errorMessagId")
 
     if ( /\.(jpeg|jpg|png)$/i.test(file.name) === false ) {
+      const fileTest = this.document.querySelector(`input[data-testid="file"]`)
+      fileTest.value = ""
       error.style.display = "block"
+      e.preventDefault()
     } else {
+      error.style.display = "none"
       formData.append('file', file)
       formData.append('email', email)
 
